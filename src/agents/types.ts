@@ -9,7 +9,7 @@ export enum AgentRole {
 export type Agent = {
   role: string;
   question: typeof prompt;
-  build: typeof prompt;
+  build: (content: string, humanFeedback?: string) => Promise<string | null>;
 };
 
 export type AgentMap = {

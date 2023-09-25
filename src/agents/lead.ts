@@ -15,17 +15,20 @@ export default {
       `);
     },
     get build() {
-      return (tests: string) => openaiprompt(`
+      return (code: string, humanFeedback?: string) => openaiprompt(`
       ${this.role}
       ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
       I want you to review, complete and or refactor these tests so that they are production ready:
 
-      ${encapsulateWithBackTicks(tests)}
-
-      Follow the same coding styles and best practices found in that code.
-
-      Your output should be code only as a string, no need for backticks.
+      ${encapsulateWithBackTicks(code)}
+      
+      Follow the same coding styles, best practices and indentations found in that code.
+      
+      Your output should be only the generated code, no parenthesis, no extra text.
+      Also make sure it's a complete code file with imports and correct paths.
+      
+      ${humanFeedback ? humanFeedback : ''}
       `);
     },
   } as Agent,

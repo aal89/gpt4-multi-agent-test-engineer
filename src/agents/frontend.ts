@@ -15,7 +15,7 @@ export default {
       `);
     },
     get build() {
-      return (code: string) => openaiprompt(`
+      return (code: string, humanFeedback?: string) => openaiprompt(`
       ${this.role}
       ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
@@ -25,7 +25,10 @@ export default {
 
       Follow the same coding styles and best practices found in that code.
 
-      Your output should be code only as a string, no need for backticks.
+      Your output should be only the generated code, no parenthesis, no extra text.
+      Also make sure it's a complete code file with imports and correct paths.
+
+      ${humanFeedback ? humanFeedback : ''}
       `);
     },
   } as Agent,

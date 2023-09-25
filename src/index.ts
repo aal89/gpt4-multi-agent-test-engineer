@@ -16,16 +16,16 @@ const debug = process.env.DEBUG === 'true';
 (async () => {
   let output: string | null = null;
   // Ask for code to build tests for
-  const answer = await input({ message: 'What code to write tests for? Give an absolute path to the file.' });
+  const filePath = await input({ message: 'What code to write tests for? Give an absolute path to the file.' });
 
-  const fileContents = readFileSync(answer, 'utf8');
+  const fileContents = readFileSync(filePath, 'utf8');
 
   if (debug) {
     console.log('\n\n\nFile contents:', fileContents);
   }
 
   console.log(`Additional context: ${process.env.ADDITIONAL_AGENT_CONTEXT}...`);
-  console.log(`Asking the lead who should write the initial tests for the code at ${answer}...`);
+  console.log(`Asking the lead who should write the initial tests for the code at ${filePath}...`);
 
   // Setup conversation between the agents
   // Lead checks to whom this task should be delegated
@@ -36,7 +36,7 @@ const debug = process.env.DEBUG === 'true';
   }
 
   if (isBackendCode === '1') {
-    console.log('The task is assinged to the API and backend expert...');
+    console.log('The task is assigned to the API and backend expert...');
     // Backend agent builds tests
     output = await agents.backend.build(fileContents);
 
@@ -68,8 +68,30 @@ const debug = process.env.DEBUG === 'true';
     console.log('\n\n\nLead agent output:', output);
   }
 
-  // Calculate the cost of the conversation and output results
+  let additionalTasks: string;
+  do {
+    console.log('\n\n', '**Output from the lead**', '\n\n');
+    console.log(output, '\n\n');
+
+    if (!output) {
+      console.log('The lead was unable to write any tests for this code.');
+      break;
+    }
+
+    additionalTasks = await input({ message: `Are you happy with this result? Type your feedback or write 'y/Y' if you're satisfied with it.` });
+
+    if (additionalTasks === 'y' || additionalTasks === 'Y') {
+      break;
+    }
+
+    console.log(`Asking the lead to ${additionalTasks}...`);
+
+    output = await agents.lead.build(output, additionalTasks);
+    
+  } while (additionalTasks !== 'y')
+
+
+  // Calculate the cost of the conversation and output the results
   const { cost, tokens } = calculateCost();
-  console.log('\n\n', '**Results**', '\n\n');
-  console.log(output, '\n\nTotal cost ($)', cost, '\nTotal tokens used (io)', tokens);
+  console.log('Total cost ($)', cost, '\nTotal tokens used (io)', tokens);
 })();
