@@ -38,10 +38,7 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
    npm i
    ```
 
-3. Set up your GPT-4 API key (or create a .env file):
-   ```bash
-   export OPENAI_API_KEY=your-api-key
-   ```
+3. Set up your environmental variables:
 
 4. Start the GPT-4 Multi-Agent Test Engineer:
    ```bash
@@ -51,7 +48,7 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
 ## 📄 Usage
 
 1. Configure your application parameters (recommended; use the .env file).
-2. Start the multi-agent test engineer.
+2. Start the multi-agent test engineer. You will be prompted what to do.
 3. Collaborate with the agents to create test cases.
 4. Review and analyze generated tests.
 
