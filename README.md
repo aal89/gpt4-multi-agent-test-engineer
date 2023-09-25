@@ -55,6 +55,17 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
 3. Collaborate with the agents to create test cases.
 4. Review and analyze generated tests.
 
+### Environmental Variables
+
+Configure your project using the following environmental variables:
+
+| Variable Name                | Description                                           |
+|------------------------------|-------------------------------------------------------|
+| `OPENAI_API_KEY`             | Your OpenAI API key for authentication.               |
+| `ADDITIONAL_AGENT_CONTEXT`   | Additional global context for all the agents to use.  |
+| `TOKEN_CAP`                  | Maximum tokens to be used overall, used as a hard cap to not maxout your credit card.                          |
+| `DEBUG`                      | Enable or disable debugging mode.   
+
 ## 🤖 Meet the Agents
 
 - Agent 1 🕵️: Specializes in UI and front-end testing.

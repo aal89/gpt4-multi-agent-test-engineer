@@ -10,6 +10,7 @@ import { readFileSync } from 'fs'
 // Check integrity of environment variables (even optional ones)
 ok(process.env.OPENAI_API_KEY);
 ok(process.env.ADDITIONAL_AGENT_CONTEXT);
+ok(process.env.TOKEN_CAP && Number(process.env.TOKEN_CAP) > 0);
 
 const debug = process.env.DEBUG === 'true';
 

@@ -25,6 +25,11 @@ export const calculateCost = () => {
 }
 
 export const prompt = async (content: string) => {
+  const totalTokens = consumedITokens + consumedOTokens + content.split(' ').length;
+  if (totalTokens >= Number(process.env.TOKEN_CAP)) {
+    return 'Token cap reached...'
+  }
+
   const result = await lib.chat.completions.create({
     model: LLMModel[MODEL].name,
     messages: [{ role: 'user', content }],
