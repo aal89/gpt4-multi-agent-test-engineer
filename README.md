@@ -7,13 +7,16 @@ Welcome to the GPT-4 Multi-Agent Test Engineer project! This innovative tool lev
 ### What is it?
 The GPT-4 Multi-Agent Test Engineer is a sophisticated testing assistant designed to generate test cases, scripts, and scenarios for a wide range of applications and software systems.
 
+### Cost Awareness
+
+It's crucial to be aware of the potential costs associated with using the OpenAI API, as costs can accumulate based on usage. While the GPT-4 Multi-Agent Test Engineer offers powerful testing capabilities, it's essential to keep an eye on your API usage to manage expenses effectively.
+
 ### Features
 - 🧠 Powered by GPT-4: Harness the advanced natural language processing capabilities of GPT-4.
 - 🤝 Multi-Agent Collaboration: Collaborate with multiple test agents for comprehensive testing coverage.
-- 📜 Test Script Generation: Automatically generate test scripts for your applications.
-- 🎯 Test Scenario Creation: Create complex test scenarios with ease.
+- 📜 Test Script Generation: Automatically generate tests for your applications.
+- 🎯 Specific: By implementing a highly specialized Multi-Agent approach, we aim to keep costs significantly lower compared to requesting the same task from AutoGPT or BabyAGI.
 - 🚦 Test Automation: Seamlessly integrate with test automation frameworks.
-- 📊 Test Reporting: Generate detailed test reports for analysis.
 - 📦 Customizable: Tailor the test engineer to your specific testing needs.
 
 ## 🚀 Getting Started
@@ -47,7 +50,7 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
 
 ## 📄 Usage
 
-1. Configure your test parameters.
+1. Configure your application parameters (recommended; use the .env file).
 2. Start the multi-agent test engineer.
 3. Collaborate with the agents to create test cases.
 4. Review and analyze generated tests.
@@ -56,7 +59,7 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
 
 - Agent 1 🕵️: Specializes in UI and front-end testing.
 - Agent 2 🧪: An expert in API and backend testing.
-- Agent 3 🚀: Focuses on performance and load testing.
+- Agent 3 🚀: Senior lead (test) engineer who's role it is to review and refactor tests.
 
 ## 💬 Feedback
 
