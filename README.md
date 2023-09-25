@@ -71,6 +71,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-A big thank you to the OpenAI, Babyagi and AutoGPT teams for making GPT-4 available and inspiring this project.
+A big thank you to the OpenAI, BabyAGI and AutoGPT teams for making GPT-4 available and inspiring this project.
 
 Let's revolutionize the way we approach testing with the GPT-4 Multi-Agent Test Engineer! 🌟

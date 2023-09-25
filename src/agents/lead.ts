@@ -5,16 +5,19 @@ import { AgentRole } from "./types";
 
 export default {
   [AgentRole.Lead]: {
-    role: `You are a senior lead (test) engineer who's role it is to review and refactor tests`,
+    role: `You are a senior lead (test) engineer who's role it is to review and refactor tests.`,
     get question() {
       return (text: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
+
       ${text}
       `);
     },
     get build() {
       return (tests: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
       I want you to review, complete and or refactor these tests so that they are production ready:
 

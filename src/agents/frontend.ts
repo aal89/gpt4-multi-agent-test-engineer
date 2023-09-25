@@ -5,16 +5,19 @@ import { AgentRole } from "./types";
 
 export default {
   [AgentRole.Frontend]: {
-    role: 'You are an agent that specializes in UI and front-end testing',
+    role: 'You are an agent that specializes in UI and front-end testing.',
     get question() {
       return (text: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
+
       ${text}
       `);
     },
     get build() {
       return (code: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
       I want you to write unit tests and or component tests for all this code:
 

@@ -9,12 +9,15 @@ export default {
     get question() {
       return (text: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
+
       ${text}
       `);
     },
     get build() {
       return (code: string) => openaiprompt(`
       ${this.role}
+      ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
       I want you to write unit tests and or functional tests for all this code:
 
