@@ -1,0 +1,20 @@
+{
+  "name": "testgpt",
+  "version": "0.1.0",
+  "description": "A multi agent (GPT-4) test engineer that writes tests",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gpt",
+    "auto",
+    "test",
+    "engineer",
+    "gpt4",
+    "multi",
+    "agent"
+  ],
+  "author": "Alex",
+  "license": "MIT"
+}
