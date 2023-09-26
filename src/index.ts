@@ -34,7 +34,16 @@ const debug = process.env.DEBUG === 'true';
 
   // Setup conversation between the agents
   // Lead checks to whom this task should be delegated
-  const isBackendCode = await agents.lead.question(`Is this a backend code: ${fileContents}. I want you to reply the number '1' (without parenthesis) if this is backend code, '0' if its frontend code and '-1' if you're unsure.`);
+  const isBackendCode = await agents.lead.question(`
+  Given an agent who specializes in API and backend testing, and another agent who specializes in UI and front-end testing.
+  Who should write tests for this: ${fileContents}?
+  
+  I want you to reply the number '1' (without parenthesis) if this is a task for the API and backend agent.
+  I want you to reply the number '0' if its an ideal task for the UI and front-end testing agent.
+  Reply '-1' if you're unsure.
+
+  Please reply with a single number and nothing else.
+`);
 
   if (debug) {
     console.log('\n\n\nisBackendCode:', isBackendCode);

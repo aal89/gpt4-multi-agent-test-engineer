@@ -5,7 +5,7 @@ import { AgentRole } from "./types";
 
 export default {
   [AgentRole.Backend]: {
-    role: 'You are an expert in API and backend testing and everything not related to UI and front-end testing.',
+    role: 'You are an expert in API and backend testing.',
     get question() {
       return (text: string) => openaiprompt(`
       ${this.role}
@@ -19,16 +19,15 @@ export default {
       ${this.role}
       ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
-      I want you to write unit tests and or functional tests for all this code:
+      I want you to write unit tests for all the following code.
+      Follow the same coding styles found in that code.
+      Also make sure it's a complete code file with imports and correct paths.
 
       ${encapsulateWithBackTicks(code)}
 
-      Follow the same coding styles and best practices found in that code.
+      Make sure the you write is complete and you dont miss tests for any function you find.
 
-      Your output should be only the generated code, no parenthesis, no extra text.
-      Also make sure it's a complete code file with imports and correct paths.
-
-      ${humanFeedback ? humanFeedback : ''}
+      ${humanFeedback ? `Here's some extra feedback: ${humanFeedback}` : ''}
       `);
     },
   } as Agent,

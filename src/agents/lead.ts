@@ -5,7 +5,7 @@ import { AgentRole } from "./types";
 
 export default {
   [AgentRole.Lead]: {
-    role: `You are a senior lead (test) engineer who's role it is to review and refactor tests.`,
+    role: `You are a senior lead engineer who's role it is to review and/or refactor tests written by other agents.`,
     get question() {
       return (text: string) => openaiprompt(`
       ${this.role}
@@ -19,16 +19,17 @@ export default {
       ${this.role}
       ${process.env.ADDITIONAL_AGENT_CONTEXT}
 
-      I want you to review, complete and or refactor these tests so that they are production ready:
+      I will supply you tests written by the backend or frontend agents.
+      I want you to review, complete and/or refactor these tests so that they are ready to be used without any further work.
+      Follow the same coding styles and indentations found in that code.
+      Also make sure it's a complete code file with imports and correct paths.
 
       ${encapsulateWithBackTicks(code)}
-      
-      Follow the same coding styles, best practices and indentations found in that code.
-      
+
       Your output should be only the generated code, no parenthesis, no extra text.
-      Also make sure it's a complete code file with imports and correct paths.
+      Your response should start with \`\`\` and end it with \`\`\`.
       
-      ${humanFeedback ? humanFeedback : ''}
+      ${humanFeedback ? `Here's some extra feedback: ${humanFeedback}` : ''}
       `);
     },
   } as Agent,
