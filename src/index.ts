@@ -11,11 +11,15 @@ import { readFileSync } from 'fs'
 ok(process.env.OPENAI_API_KEY);
 ok(process.env.ADDITIONAL_AGENT_CONTEXT);
 ok(process.env.TOKEN_CAP && Number(process.env.TOKEN_CAP) > 0);
+ok(process.env.LLMODEL)
 
 const debug = process.env.DEBUG === 'true';
 
 (async () => {
   let output: string | null = null;
+
+  console.log('Using LLM:', process.env.LLMODEL);
+
   // Ask for code to build tests for
   const filePath = await input({ message: 'What code to write tests for? Give an absolute path to the file.' });
 
@@ -36,7 +40,7 @@ const debug = process.env.DEBUG === 'true';
     console.log('\n\n\nisBackendCode:', isBackendCode);
   }
 
-  if (isBackendCode === '1') {
+  if (isBackendCode === '1' || isBackendCode === '-1') {
     console.log('The task is assigned to the API and backend expert...');
     // Backend agent builds tests
     output = await agents.backend.build(fileContents);
@@ -57,13 +61,12 @@ const debug = process.env.DEBUG === 'true';
   }
 
   if (!output) {
-    console.log('The lead was unsure if this was frontend or backend code, it will write the tests itself...');
+    throw new Error('No output from the agents');
   }
 
-  console.log('The lead is reviewing/writing the code...');
+  console.log('The lead is reviewing the code...');
   // Let the lead review and optionally refactor the built tests.
-  // If theres no output, then the lead agent will build the tests
-  output = await agents.lead.build(output ?? fileContents);
+  output = await agents.lead.build(output);
 
   if (debug) {
     console.log('\n\n\nLead agent output:', output);

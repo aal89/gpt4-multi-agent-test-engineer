@@ -23,7 +23,7 @@ describe('LLMModel testing', () => {
     it('should return 0 cost when no tokens are provided', () => {
       const result = calculateCost();
 
-      expect(result.cost).toBe(((0 + 0 * 0.03 + 0 * 0.06) / 1000).toFixed(2));
+      expect(result.cost).toBe('0.00');
       expect(result.tokens).toBe(0);
     });
 
