@@ -10,6 +10,10 @@
     "removeComments": true       /* Remove comments from the compiled JavaScript files */
   },
   "include": [
-    "./src/**/*.ts"             /* Specify the source files to include in the compilation */
+    "./src/**/*.ts"              /* Specify the source files to include in the compilation */
+  ],
+  "exclude": [
+    "./node_modules",            /* Specify the files to exclude from compilation */
+    "./src/**/*.test.ts"
   ]
 }
