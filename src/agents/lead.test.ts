@@ -28,12 +28,7 @@ describe('AgentRole', () => {
       const testText = 'Test question';
       await lead.question(testText);
 
-      expect(openaiprompt).toHaveBeenCalledWith(`
-      ${lead.role}
-      ${process.env.ADDITIONAL_AGENT_CONTEXT}
-
-      ${testText}
-      `);
+      expect(openaiprompt).toHaveBeenCalledWith(lead.role, testText);
     });
     
   });

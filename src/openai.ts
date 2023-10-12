@@ -1,53 +1,40 @@
 import OpenAI from "openai";
+import { program } from "./program";
 
 const LLModel = {
   GPT4: {
     name: 'gpt-4',
-    inputPrice: 0.03,
-    outputPrice: 0.06
+    inputPricePerToken: 0.03 / 1000,
+    outputPricePerToken: 0.06 / 1000,
   },
   GPT35TURBO: {
     name: 'gpt-3.5-turbo',
-    inputPrice: 0.0015,
-    outputPrice: 0.002
+    inputPricePerToken: 0.0015 / 1000,
+    outputPricePerToken: 0.002 / 1000
   },
 }
 
 type Model = keyof typeof LLModel;
 
-const envModelSelection = process.env.LLMODEL ?? '';
-
-const strIsLLMModel = (key: string): key is keyof typeof LLModel => {
-  return Object.keys(LLModel).some(k => k === key);
-}
-
-export const defaultModel: keyof typeof LLModel = strIsLLMModel(envModelSelection) ? envModelSelection : 'GPT4';
-
-let consumedITokens = 0;
-let consumedOTokens = 0;
+let totalTokens = 0;
+let totalCost = 0;
 
 const lib = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: program.opts().apiKey,
 });
 
-export const calculateCost = (model?: Model) => {
-  const inputPrice = consumedITokens * LLModel[model ?? defaultModel].inputPrice;
-  const outputPrice = consumedOTokens * LLModel[model ?? defaultModel].outputPrice;
-  return {
-    cost: ((inputPrice + outputPrice) / 1000).toFixed(2),
-    tokens: consumedITokens + consumedOTokens,
-  }
-}
+export const getTotals = () => ({
+    cost: totalCost.toFixed(2),
+    tokens: totalTokens,
+})
 
-export const prompt = async (content: string, model?: Model) => {
-  const totalTokens = consumedITokens + consumedOTokens + content.split(' ').length;
-  if (totalTokens >= Number(process.env.TOKEN_CAP)) {
-    return 'Token cap reached...'
-  }
+export const prompt = async (contentRole: string, content: string, model: Model) => {
+  const selectedModel = LLModel[model];
 
   const result = await lib.chat.completions.create({
-    model: LLModel[model ?? defaultModel].name,
-    messages: [{ role: 'user', content }],
+    model: selectedModel.name,
+    messages: [{ role: 'system', content: contentRole }, { role: 'user', content }],
+    temperature: 0.2,
   });
 
   if (!result.usage?.total_tokens || !result.choices.length) {
@@ -57,8 +44,9 @@ export const prompt = async (content: string, model?: Model) => {
   const [choice] = result.choices;
   const { prompt_tokens, completion_tokens } = result.usage;
 
-  consumedITokens += prompt_tokens;
-  consumedOTokens += completion_tokens;
+  // keep track of tokens+cost (output)
+  totalTokens += prompt_tokens + completion_tokens;
+  totalCost += selectedModel.inputPricePerToken * prompt_tokens + selectedModel.outputPricePerToken * completion_tokens;
 
   return choice.message.content;
 };

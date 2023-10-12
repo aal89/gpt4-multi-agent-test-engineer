@@ -1,15 +1,13 @@
-import { prompt } from '../openai';
+import { Config } from "../config";
 
 export enum AgentRole {
-  Frontend = 'frontend',
-  Backend = 'backend',
+  Tester = 'tester',
   Lead = 'lead',
 }
 
 export type Agent = {
   role: string;
-  question: typeof prompt;
-  build: (content: string, humanFeedback?: string) => Promise<string | null>;
+  build: (content: string, config: Config) => Promise<string | null>;
 };
 
 export type AgentMap = {

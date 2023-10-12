@@ -1,0 +1,10 @@
+.ts:
+  techstack:
+    - typescript
+    - jest
+  context: |-
+    Wrap test groups in 'describe' blocks
+  examples:
+    - name: openai file
+      code: src/openai.ts
+      tests: src/openai.test.ts

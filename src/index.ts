@@ -1,110 +1,71 @@
-import * as dotenv from 'dotenv'
-dotenv.config();
-
-import { ok } from 'assert'
-import { input } from '@inquirer/prompts';
-import { calculateCost } from './openai'
+import { getTotals } from './openai'
 import agents from './agents/agents';
 import { readFileSync } from 'fs'
+import chalk from 'chalk'
+import { join as joinPaths, parse } from  'path';
+import { existsSync, writeFileSync } from 'fs';
+import { loadConfig } from './config';
+import { program } from './program';
 
-// Check integrity of environment variables (even optional ones)
-ok(process.env.OPENAI_API_KEY);
-ok(process.env.ADDITIONAL_AGENT_CONTEXT);
-ok(process.env.TOKEN_CAP && Number(process.env.TOKEN_CAP) > 0);
-ok(process.env.LLMODEL)
-
-const debug = process.env.DEBUG === 'true';
+const log = (message: string) => console.log(chalk.bold(chalk.green(message)));
+const loggrey = (message: string) => console.log(chalk.bold(chalk.grey(message)));
+const logblue = (message: string) => console.log(chalk.bold(chalk.blue(message)));
+export const error = (message: string) => console.log(chalk.bold(chalk.red(message)));
 
 (async () => {
-  let output: string | null = null;
+  try {
+    const userFile = program.args[0];
 
-  console.log('Using LLM:', process.env.LLMODEL);
+    // load config file
+    const { path, config } = loadConfig();
+    logblue(`Using config file found at ${path}`);
 
-  // Ask for code to build tests for
-  const filePath = await input({ message: 'What code to write tests for? Give an absolute path to the file.' });
+    // write file argument out to console from commander
+    const userFilePath = joinPaths(process.cwd(), userFile);
+    const parsedUserFilePath = parse(userFilePath);
+    const newFileName = parsedUserFilePath.name + '.test' + parsedUserFilePath.ext;
+    const newFileNamePath = joinPaths(parsedUserFilePath.dir, newFileName);
+    const [configForExtension] = config.map(c => c[parsedUserFilePath.ext]);
 
-  const fileContents = readFileSync(filePath, 'utf8');
-
-  if (debug) {
-    console.log('\n\n\nFile contents:', fileContents);
-  }
-
-  console.log(`Additional context: ${process.env.ADDITIONAL_AGENT_CONTEXT}...`);
-  console.log(`Asking the lead who should write the initial tests for the code at ${filePath}...`);
-
-  // Setup conversation between the agents
-  // Lead checks to whom this task should be delegated
-  const isBackendCode = await agents.lead.question(`
-  Given an agent who specializes in API and backend testing, and another agent who specializes in UI and front-end testing.
-  Who should write tests for this: ${fileContents}?
-  
-  I want you to reply the number '1' (without parenthesis) if this is a task for the API and backend agent.
-  I want you to reply the number '0' if its an ideal task for the UI and front-end testing agent.
-  Reply '-1' if you're unsure.
-
-  Please reply with a single number and nothing else.
-`);
-
-  if (debug) {
-    console.log('\n\n\nisBackendCode:', isBackendCode);
-  }
-
-  if (isBackendCode === '1' || isBackendCode === '-1') {
-    console.log('The task is assigned to the API and backend expert...');
-    // Backend agent builds tests
-    output = await agents.backend.build(fileContents);
-
-    if (debug) {
-      console.log('\n\n\nBackend agent output:', output);
+    if (!configForExtension) {
+      throw new Error(`No config found for extension ${parsedUserFilePath.ext}`);
     }
-  }
 
-  if (isBackendCode === '0') {
-    console.log('The task is assinged to the specialist in UI and front-end testing...');
-    // Frontend agent builds tests
-    output = await agents.frontend.build(fileContents);
-
-    if (debug) {
-      console.log('\n\n\nFrontend agent output:', output);
+    if (!existsSync(userFilePath) || !parsedUserFilePath.ext) {
+      throw new Error(`File ${userFilePath} does not exist or unknown file extension`);
     }
-  }
 
-  if (!output) {
-    throw new Error('No output from the agents');
-  }
+    logblue(`Generating ${newFileNamePath}`);
 
-  console.log('The lead is reviewing the code...');
-  // Let the lead review and optionally refactor the built tests.
-  output = await agents.lead.build(output);
+    const fileContents = readFileSync(userFilePath, 'utf8');
+    
+    // Make the agents work together and generate the tests
+    let output: string | null = null;
 
-  if (debug) {
-    console.log('\n\n\nLead agent output:', output);
-  }
-
-  let additionalTasks: string;
-  do {
-    console.log('\n\n', '**Output from the lead**', '\n\n');
-    console.log(output, '\n\n');
+    output = await agents.tester.build(fileContents, configForExtension);
 
     if (!output) {
-      console.log('The lead was unable to write any tests for this code.');
-      break;
+      throw new Error('No output from tester agent. Change config and try again.');
+    }
+  
+    // Let the lead review and optionally refactor the built tests.
+    output = await agents.lead.build(output, configForExtension);
+
+    if (!output) {
+      throw new Error('No output from lead agent. Change config and try again.');
     }
 
-    additionalTasks = await input({ message: `Are you happy with this result? Type your feedback or write 'y/Y' if you're satisfied with it.` });
-
-    if (additionalTasks === 'y' || additionalTasks === 'Y') {
-      break;
-    }
-
-    console.log(`Asking the lead to ${additionalTasks}...`);
-
-    output = await agents.lead.build(output, additionalTasks);
-    
-  } while (additionalTasks !== 'y')
-
-
-  // Calculate the cost of the conversation and output the results
-  const { cost, tokens } = calculateCost();
-  console.log('Total cost ($)', cost, '\nTotal tokens used (io)', tokens);
+    // write the output to the file
+    log(`Done!`);
+    // remove first and last line from output
+    const cleanOutput = output.split('\n').slice(1, -1).join('\n');
+    writeFileSync(newFileNamePath, cleanOutput, 'utf8')
+  
+    // Calculate the cost of the conversation and output the results
+    const { cost, tokens } = getTotals();
+    loggrey(`Total tokens used (io): ${tokens}`);
+    loggrey(`Total cost $${cost}`);
+  } catch (err) {
+    error((err as Error).message);
+  }
 })();

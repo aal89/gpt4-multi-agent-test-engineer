@@ -28,12 +28,7 @@ describe('AgentRole', () => {
       const testText = 'Test question';
       await backend.question(testText);
 
-      expect(openaiprompt).toHaveBeenCalledWith(`
-      ${backend.role}
-      ${process.env.ADDITIONAL_AGENT_CONTEXT}
-
-      ${testText}
-      `);
+      expect(openaiprompt).toHaveBeenCalledWith(backend.role, testText);
     });
     
   });
