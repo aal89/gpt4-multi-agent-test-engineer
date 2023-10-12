@@ -1,18 +1,4 @@
-import { calculateCost, prompt } from './openai';
-
-const createMock = jest.fn();
-
-jest.mock('openai', () => ({
-  ...jest.requireActual('openai'),
-  __esModule: true,
-  default: jest.fn().mockImplementation(() => ({
-    chat: {
-      completions: {
-        create: jest.fn(() => createMock()),
-      },
-    },
-  } as any)),
-}));
+import { getTotals, prompt } from './openai';
 
 describe('LLMModel testing', () => {
   beforeAll(() => {
@@ -21,7 +7,7 @@ describe('LLMModel testing', () => {
 
   describe('calculateCost', () => {
     it('should return 0 cost when no tokens are provided', () => {
-      const result = calculateCost();
+      const result = getTotals();
 
       expect(result.cost).toBe('0.00');
       expect(result.tokens).toBe(0);
@@ -29,33 +15,26 @@ describe('LLMModel testing', () => {
 
     it('should calculate cost correctly', async () => {
       const mockResult = {
-        usage: { total_tokens: 2000, prompt_tokens: 1000, completion_tokens: 1000 },
+        usage: { total_tokens: 20000, prompt_tokens: 10000, completion_tokens: 10000 },
         choices: [{ message: { content: 'test' } }],
       };
-      createMock.mockResolvedValue(mockResult);
+      global.openAICompletionCreateMock.mockResolvedValue(mockResult);
 
-      await prompt('test');
+      await prompt('test', 'test', 'GPT4');
+      await prompt('test', 'test', 'GPT35TURBO');
 
-      const result = calculateCost();
+      const result = getTotals();
 
-      expect(result.cost).toBe('0.09');
-      expect(result.tokens).toBe(2000);
+      expect(result.cost).toBe('0.93');
+      expect(result.tokens).toBe(40000);
     });
   });
 
   describe('prompt', () => {
-    it('should return an error message when token cap is exceeded', async () => {      
-      const message = 'test '.repeat(10001);
-      createMock.mockResolvedValue({ usage: { total_tokens: 10001 }, choices: [{ message }] } as any);
-
-      const result = await prompt(message);
-      expect(result).toBe(`Token cap reached...`);
-    });
-
     it('should throw an error when openai returns no response', async () => {
-      createMock.mockResolvedValue({});
+      global.openAICompletionCreateMock.mockResolvedValue({});
 
-      await expect(prompt('test ')).rejects.toThrow('No response returned');
+      await expect(prompt('test ', 'test ', 'GPT35TURBO')).rejects.toThrow('No response returned');
     });
 
     it('should return message content correctly', async () => {
@@ -63,9 +42,9 @@ describe('LLMModel testing', () => {
         usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
         choices: [{ message: { content: 'test message content1' } }],
       };
-      createMock.mockResolvedValue(mockResult);
+      global.openAICompletionCreateMock.mockResolvedValue(mockResult);
 
-      await expect(prompt('test message content1')).resolves.toBe(mockResult.choices[0].message.content);
+      await expect(prompt('test message content1', 'test message content1', 'GPT35TURBO')).resolves.toBe(mockResult.choices[0].message.content);
     });
   });
 });

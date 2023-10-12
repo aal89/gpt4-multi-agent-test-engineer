@@ -13,34 +13,22 @@ describe('AgentRole', () => {
     expect(lead).toBeDefined();
   });
 
-  it('Lead role should have a question method', () => {
-    expect(lead.question).toBeDefined();
-    expect(typeof lead.question).toBe("function");
-  });
-
   it('Lead role should have a build method', () => {
     expect(lead.build).toBeDefined();
     expect(typeof lead.build).toBe("function");
   });
 
-  describe('question method', () => {
-    it('calls openai prompt with correct arguments', async () => {
-      const testText = 'Test question';
-      await lead.question(testText);
-
-      expect(openaiprompt).toHaveBeenCalledWith(lead.role, testText);
-    });
-    
-  });
-
   describe('build method', () => {
     it('calls openai prompt with correct arguments', async () => {
       const code = 'Test code';
-      const humanFeedback = 'Test feedback';
 
-      await lead.build(code, humanFeedback);
+      await lead.build(code, {
+        techstack: [],
+        context: 'test',
+        examples: [],
+      });
 
-      expect(openaiprompt).toHaveBeenCalledWith(expect.any(String));
+      expect(openaiprompt).toHaveBeenCalledWith(expect.any(String), expect.any(String), 'GPT4');
     });
   });
 });

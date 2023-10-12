@@ -4,7 +4,7 @@
   "description": "A multi agent (GPT-4) test engineer that writes tests for you.",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest --detectOpenHandles --forceExit --coverage --verbose --watchAll=false",
+    "test": "jest --silent --detectOpenHandles --forceExit --coverage --verbose --watchAll=false",
     "start": "ts-node src/index.ts",
     "build": "tsc"
   },
