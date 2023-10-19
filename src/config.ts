@@ -40,17 +40,19 @@ export const findConfigFile = () => {
   return null;
 }
 
-const validateConfig = (config: Array<unknown>): Configs => {
+export const validateConfig = (config: Array<unknown>): Configs => {
 
   if (!Array.isArray(config)) {
     throw new Error(`Invalid config. See README.`);
   }
 
-  if (config.some(c => typeof c !== 'object')) {
+  if (config.some(c => typeof c !== 'object' || c === null || c === undefined)) {
     throw new Error(`Invalid config. See README.`);
   }
 
-  config.forEach(c => {
+  const filteredConfig = config.filter(e => e);
+
+  filteredConfig.forEach(c => {
     const values = Object.values(c as object)[0]
 
     if (typeof values !== 'object') {
@@ -98,7 +100,7 @@ const validateConfig = (config: Array<unknown>): Configs => {
 
   });
 
-  return config as Configs;
+  return filteredConfig as Configs;
 }
 
 export const loadConfig = () => {
