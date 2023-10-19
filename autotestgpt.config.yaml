@@ -3,7 +3,7 @@
     - typescript
     - jest
   context: |-
-    Wrap test groups in 'describe' blocks
+    Write for each exported function a unit test. Wrap test groups in 'describe' blocks.
   examples:
     - name: openai file
       code: src/openai.ts
