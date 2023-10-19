@@ -10,7 +10,7 @@ export default {
     get build() {
       return (code: string, config: Config) => openaiprompt(this.role, `
 Using these technologies: ${config.techstack.join(', ')}.
-Using this code and tests as examples:
+Here are some examples to learn from:
 
 ${generateExamplesFromConfig(config)}.
 
@@ -20,12 +20,12 @@ A test engineer wrote the following tests, please review them and refactor them 
 
 ${encapsulateWithBackTicks(code, 'code-to-review')}
 
-Make sure the code you write is complete, you don't miss any line, branch or statement.
+When you refactor tests always combine them into one test. Do not summarize or brevify the tests.
+The tests must be complete and whole. Don't miss any line, branch or statement.
 
-**VERY IMPORTANT**
-Your response should be only the code you wrote, no parenthesis, no extra text.
-It should start with \`\`\` and end it with \`\`\`.
-**VERY IMPORTANT**
+I know you really like to tell me what you did and why, but don't do that. I don't care.
+Your reponse should be only the code you wrote. No additional text, not before, not after. Your
+response should start with \`\`\` and end with \`\`\`.
 `, 'GPT4');
     },
   } as Agent,

@@ -10,7 +10,7 @@ export default {
     get build() {
       return (code: string, config: Config) => openaiprompt(this.role, `
 Using these technologies: ${config.techstack.join(', ')}.
-Using this code and tests as examples:
+Here are some examples to learn from:
 
 ${generateExamplesFromConfig(config)}.
 
@@ -22,7 +22,7 @@ ${encapsulateWithBackTicks(code, 'code-to-write-tests-for')}
 
 Please, make sure the code you write is complete, you don't miss any line, branch or statement.
 
-Your response should be only the code you wrote, no parenthesis, no extra text.
+Please, your response should be only the code you wrote, no parenthesis, no extra text.
 It should start with \`\`\` and end it with \`\`\`.
 `, 'GPT35TURBO');
     },
