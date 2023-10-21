@@ -37,6 +37,8 @@ This will install the tool globally, making it accessible from any location in y
 
 Use it like this: `autotestgpt [path-to-file]` to generate test for code. See chapters below in order to configure it.
 
+See additional help instructions by running this: `autotestgpt --help`
+
 ### Environmental Variables
 
 Configure your project using the following environmental variables:
