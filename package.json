@@ -10,6 +10,10 @@
     "build:publish": "npm run build && npm publish --access public",
     "build:global": "npm run build && npm uninstall autotestgpt -g && npm install -g ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aal89/gpt4-multi-agent-test-engineer.git"
+  },
   "keywords": [
     "gpt",
     "auto",
