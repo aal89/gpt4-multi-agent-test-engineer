@@ -50,6 +50,7 @@ Configure your project using the following environmental variables:
 
 To enhance the capabilities of the GPT-4 Multi-Agent Test Engineer, the tool relies on a configuration file in YAML format. This configuration file should be placed in the root folder of your project and provides essential information for generating tests. Below is an example structure of the configuration file:
 
+`autotestgpt.config.yaml`
 ```yaml
 .ts:
   techstack:

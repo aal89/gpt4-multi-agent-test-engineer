@@ -2,7 +2,7 @@
   "name": "autotestgpt",
   "version": "0.1.0",
   "description": "A multi agent (GPT-4) test engineer that writes tests for you.",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "scripts": {
     "test": "jest --silent --detectOpenHandles --forceExit --coverage --verbose --watchAll=false",
     "start": "ts-node src/index.ts",
@@ -19,6 +19,9 @@
   ],
   "author": "Alex",
   "license": "MIT",
+  "bin": {
+    "autotestgpt": "dist/src/index.js"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.5",
     "@types/js-yaml": "^4.0.6",

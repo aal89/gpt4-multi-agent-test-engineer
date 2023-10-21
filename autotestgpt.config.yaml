@@ -5,6 +5,6 @@
   context: |-
     Write for each exported function a unit test. Wrap test groups in 'describe' blocks.
   examples:
-    - name: openai file
-      code: src/openai.ts
-      tests: src/openai.test.ts
+    - name: agents file
+      code: src/agents/agents.ts
+      tests: src/agents/agents.test.ts

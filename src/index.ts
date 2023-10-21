@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { getTotals } from './openai'
 import agents from './agents/agents';
 import { readFileSync } from 'fs'
@@ -35,7 +37,7 @@ export const error = (message: string) => console.log(chalk.bold(chalk.red(messa
       throw new Error(`File ${userFilePath} does not exist or unknown file extension`);
     }
 
-    logblue(`Generating ${newFileNamePath}`);
+    logblue(`Generating ${newFileNamePath}, hold this could take a minute...`);
 
     const fileContents = readFileSync(userFilePath, 'utf8');
     
