@@ -27,47 +27,62 @@ Before you start using the GPT-4 Multi-Agent Test Engineer, ensure you have the 
 - OpenAI API Key (Get one at [OpenAI](https://platform.openai.com/account/api-keys))
 
 ### Installation
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/aal89/gpt4-multi-agent-test-engineer.git
-   cd gpt4-multi-agent-test-engineer
-   ```
+To install the GPT-4 Multi-Agent Test Engineer globally, open your terminal and run the following command:
 
-2. Install dependencies:
-   ```bash
-   npm i
-   ```
+```sh
+npm install -g autotestgpt
+```
 
-3. Set up your environmental variables:
+This will install the tool globally, making it accessible from any location in your system.
 
-4. Start the GPT-4 Multi-Agent Test Engineer:
-   ```bash
-   npm run start
-   ```
-
-## 📄 Usage
-
-1. Configure your application parameters (recommended; use the .env file).
-2. Start the multi-agent test engineer. You will be prompted what to do.
-3. Collaborate with the agents to create test cases.
-4. Review and analyze generated tests.
+Use it like this: `autotestgpt [path-to-file]` to generate test for code. See chapters below in order to configure it.
 
 ### Environmental Variables
 
 Configure your project using the following environmental variables:
 
-| Variable Name                | Description                                           |
-|------------------------------|-------------------------------------------------------|
-| `OPENAI_API_KEY`             | Your OpenAI API key for authentication.               |
-| `ADDITIONAL_AGENT_CONTEXT`   | Additional global context for all the agents to use.  |
-| `TOKEN_CAP`                  | Maximum tokens to be used overall, used as a hard cap to not maxout your credit card.                          |
-| `DEBUG`                      | Enable or disable debugging mode.   
+| Variable Name                            | Description                                                                                                 |
+|------------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| `AUTOTESTGPT_OPENAI_API_KEY`             | Your OpenAI API key for authentication. You can also set this value through the `--api-key` cli option      |
+
+
+### 📄 Configuration File
+
+To enhance the capabilities of the GPT-4 Multi-Agent Test Engineer, the tool relies on a configuration file in YAML format. This configuration file should be placed in the root folder of your project and provides essential information for generating tests. Below is an example structure of the configuration file:
+
+```yaml
+.ts:
+  techstack:
+    - typescript
+    - jest
+  context: |-
+    Write for each exported function a unit test. Wrap test groups in 'describe' blocks.
+  examples:
+    - name: openai file
+      code: src/openai.ts
+      tests: src/openai.test.ts
+```
+
+The configuration file consists of the following key sections:
+
+- `.ts`: This section defines the target file type. In this example, `.ts` represents TypeScript files.
+- `techstack`: Here, you specify the technology stack associated with your project. This helps the tool understand the context and requirements for generating appropriate tests.
+- `context`: (optional) This field allows you to provide a high-level description of how tests should be generated for the specified file type. You can use this to guide the tool in creating tests that align with your project's testing standards.
+- `examples`: (optional) Under this section, you can list specific examples related to your project. These examples include:
+  - `name`: A descriptive name for the example.
+  - `code`: The path to the code file that stands as an example in all prompts used to further enhance the test engineer.
+  - `tests`: The path to the tests for the code above. This will also be included in all prompts to the test engineer.
+
+By configuring this file according to your project's needs, you can tailor the test generation process to match your testing framework and standards.
+
+Remember to keep the configuration file up to date as your project evolves and as new testing requirements emerge.
+
+By utilizing this configuration file, you can ensure that the GPT-4 Multi-Agent Test Engineer generates tests that align with your project's testing goals and specifications.
 
 ## 🤖 Meet the Agents
 
-- Agent 1 🕵️: Specializes in UI and front-end testing.
-- Agent 2 🧪: An expert in API and backend testing.
-- Agent 3 🚀: Senior lead (test) engineer who's role it is to review and refactor tests.
+- Agent 1 🕵️: 🚀: Senior lead (test) engineer who's role it is to review and refactor tests.
+- Agent 2 🧪: A software engineer specialized in writing automated tests.
 
 ## 💬 Feedback
 
