@@ -25,14 +25,17 @@ export const generateExamplesFromConfig = (config: Config) => {
   const baseDir = dirname(configDir);
 
   return config.examples.map(example => {
+    const exampleCodePath = joinPaths(baseDir, example.code);
+    const exampleTestsPath = joinPaths(baseDir, example.tests);
+
     // if the files don't exist, return empty string
-    if (!existsSync(joinPaths(baseDir, example.code)) || !existsSync(joinPaths(baseDir, example.tests))) {
+    if (!existsSync(exampleCodePath) || !existsSync(exampleTestsPath)) {
       error(`Example files ${example.code} or ${example.tests} do not exist. Check config.`);
       return '';
     }
 
-    const code = readFileSync(joinPaths(baseDir, example.code), 'utf8');
-    const tests = readFileSync(joinPaths(baseDir, example.tests), 'utf8');
+    const code = readFileSync(exampleCodePath, 'utf8');
+    const tests = readFileSync(exampleTestsPath, 'utf8');
 
     return encapsulateWithBackTicks(code, 'example-code') + '\n' + encapsulateWithBackTicks(tests, 'example-tests');
   }).join('\n\n');

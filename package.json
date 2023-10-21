@@ -7,7 +7,8 @@
     "test": "jest --silent --detectOpenHandles --forceExit --coverage --verbose --watchAll=false",
     "start": "ts-node src/index.ts",
     "build": "tsc",
-    "publish": "npm run build && npm publish --access public"
+    "build:publish": "npm run build && npm publish --access public",
+    "build:global": "npm run build && npm uninstall autotestgpt -g && npm install -g ."
   },
   "keywords": [
     "gpt",

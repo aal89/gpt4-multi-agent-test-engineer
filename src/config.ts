@@ -40,7 +40,7 @@ export const findConfigFile = () => {
   return null;
 }
 
-export const validateConfig = (config: Array<unknown>): Configs => {
+export const validateConfig = (config: Array<unknown>, configLocation: string): Configs => {
 
   if (!Array.isArray(config)) {
     throw new Error(`Invalid config. See README.`);
@@ -90,8 +90,8 @@ export const validateConfig = (config: Array<unknown>): Configs => {
       }
 
       // validate files exists
-      const codeFilepath = existsSync(joinPaths(process.cwd(), e.code));
-      const testsFilepath = existsSync(joinPaths(process.cwd(), e.tests));
+      const codeFilepath = existsSync(joinPaths(dirname(configLocation), e.code));
+      const testsFilepath = existsSync(joinPaths(dirname(configLocation), e.tests));
       
       if (!codeFilepath || !testsFilepath) {
         throw new Error(`Unable to find code or tests file for example ${e.name}, check paths in config.`);
@@ -115,6 +115,6 @@ export const loadConfig = () => {
 
   return {
     path: configFilepath,
-    config: validateConfig(config)
+    config: validateConfig(config, configFilepath)
   };
 }
