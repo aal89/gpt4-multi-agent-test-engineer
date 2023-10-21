@@ -37,7 +37,7 @@ export const error = (message: string) => console.log(chalk.bold(chalk.red(messa
       throw new Error(`File ${userFilePath} does not exist or unknown file extension`);
     }
 
-    logblue(`Generating ${newFileNamePath}, hold this could take a minute...`);
+    logblue(`Generating ${newFileNamePath}, this could take a minute...`);
 
     const fileContents = readFileSync(userFilePath, 'utf8');
     
