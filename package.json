@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --silent --detectOpenHandles --forceExit --coverage --verbose --watchAll=false",
     "start": "ts-node src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "publish": "npm run build && npm publish --access public"
   },
   "keywords": [
     "gpt",
