@@ -1,6 +1,6 @@
 {
   "name": "autotestgpt",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A multi agent (GPT-4) test engineer that writes tests for you.",
   "main": "dist/src/index.js",
   "scripts": {
